@@ -40,7 +40,7 @@ def modulus(a,b):
     return c
 
 def log_history(first_operand, operator, second_operand, result):
-    with open('history_log.txt', 'a') as file:
+    with open('./source/history_log.txt', 'a') as file:
         file.write(f"{first_operand} {operator} {second_operand} = {result}\n")
 
 def show_history():
@@ -54,4 +54,4 @@ def show_menu():
     print("Main Menu")
     print("1. Calculator")
     print("2. Settings")
-    #print("3. Exit")
+    print("0. Exit")
