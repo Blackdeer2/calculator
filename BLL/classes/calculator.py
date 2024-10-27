@@ -1,5 +1,5 @@
 from constants import global_value
-import functions
+import BLL.functions as functions
 
 
 class Calculator:
