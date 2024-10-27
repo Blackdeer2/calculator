@@ -7,12 +7,14 @@ from Sources.ABC123asterism import draw_char_asterism
 class MyAsciiArtGenerator:
     def __init__(self):
         self.art_text = ""
-        self.font = "standard"
+        #self.font = "standard"
         self.color = "white"
         self.width_factor = 1  
         self.height_factor = 1  
         self.art_symbol = "" 
         self.ascii_text = ""
+        self.max_width = 140
+        self.max_height = 28
 
     def get_input(self):
         while True:
