@@ -8,7 +8,6 @@ from Sources.ABC123asterism import draw_char_asterism
 class MyAsciiArtGenerator:
     def __init__(self):
         self.art_text = ""
-        #self.font = "standard"
         self.color = "white"
         self.width_factor = 1  
         self.height_factor = 1  
@@ -66,6 +65,16 @@ class MyAsciiArtGenerator:
                 print("Using default symbol '#' for the ASCII art.")
                 self.art_symbol = "#"
 
+    def get_alignment(self):
+        while True:
+            alignment = input("Choose text alignment (left, center, right): ").strip().lower()
+            if alignment in ['left', 'center', 'right']:
+                self.alignment = alignment
+                break
+            else:
+                print("Invalid input. Please choose 'left', 'center', or 'right'.")
+
+
     def scale_ascii_art(self, ascii_art):
         scaled_lines = []
         for line in ascii_art.splitlines():
@@ -95,24 +104,25 @@ class MyAsciiArtGenerator:
             #     print(line)
             # print()
     
-    # def align_text(self, art, alignment, width):
-    #         lines = art.split('\n')
-    #         aligned_art = ""
-    #         for line in lines:
-    #             if alignment == 'center':
-    #                 aligned_art += line.center(width) + '\n'
-    #             elif alignment == 'left':
-    #                 aligned_art += line.ljust(width) + '\n'
-    #             elif alignment == 'right':
-    #                 aligned_art += line.rjust(width) + '\n'
-    #         return aligned_art
-    
     def generate_art_symbol(self):
         try:
             ascii_art = self.figlet_format(self.art_text, self.art_symbol)
             scaled_art = self.scale_ascii_art(ascii_art)
+
+            art_lines = scaled_art.splitlines()
+            aligned_art_lines = []
+            for line in art_lines:
+                if self.alignment == 'center':
+                    aligned_line = line.center(self.max_width)
+                elif self.alignment == 'right':
+                    aligned_line = line.rjust(self.max_width)
+                else:  # self.alignment == 'left'
+                    aligned_line = line.ljust(self.max_width)
+                aligned_art_lines.append(aligned_line)
+
+            aligned_art = "\n".join(aligned_art_lines)
             color_code = ansi_colors.ANSI_COLORS.get(self.color, '\033[37m')  
-            colored_art = f"{color_code}{scaled_art}\033[0m"
+            colored_art = f"{color_code}{aligned_art}\033[0m"
             ascii_art = colored_art.replace("#", self.art_symbol)
             self.ascii_text = ascii_art
 
@@ -129,19 +139,10 @@ class MyAsciiArtGenerator:
                 print(''.join(line))
 
             return canvas
-
-
-            # print(ascii_art)
-            # return ascii_art
+        
         except Exception as e:
             print(f"Error  generating ASCII art: {e}")
             return None
-
-    # def preview_art(self):
-    #     art_preview = self.generate_art()
-    #     if art_preview:
-    #         print("Preview of your ASCII art:")
-    #         print(art_preview)
 
     def save_to_file(self):
         try:
@@ -193,7 +194,7 @@ class MyAsciiArtGenerator:
             self.get_symbol()
             self.get_color()
             self.get_scaling_factors()
-            #self.align_text()
+            self.get_alignment()
             self.generate_art_symbol()
 
             save_choice = input("Do you want to save the ASCII art to a file? (yes/no): ").strip().lower()
