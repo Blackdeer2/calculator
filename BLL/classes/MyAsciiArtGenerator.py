@@ -1,4 +1,5 @@
 import os
+import shutil
 from BLL.constants import ansi_colors
 from Sources.ABC123hash import draw_char_hash
 from Sources.ABC123dog import draw_char_dog
@@ -15,6 +16,7 @@ class MyAsciiArtGenerator:
         self.ascii_text = ""
         self.max_width = 140
         self.max_height = 28
+        self.alignment = "center"
 
     def get_input(self):
         while True:
@@ -93,6 +95,18 @@ class MyAsciiArtGenerator:
             #     print(line)
             # print()
     
+    # def align_text(self, art, alignment, width):
+    #         lines = art.split('\n')
+    #         aligned_art = ""
+    #         for line in lines:
+    #             if alignment == 'center':
+    #                 aligned_art += line.center(width) + '\n'
+    #             elif alignment == 'left':
+    #                 aligned_art += line.ljust(width) + '\n'
+    #             elif alignment == 'right':
+    #                 aligned_art += line.rjust(width) + '\n'
+    #         return aligned_art
+    
     def generate_art_symbol(self):
         try:
             ascii_art = self.figlet_format(self.art_text, self.art_symbol)
@@ -101,17 +115,33 @@ class MyAsciiArtGenerator:
             colored_art = f"{color_code}{scaled_art}\033[0m"
             ascii_art = colored_art.replace("#", self.art_symbol)
             self.ascii_text = ascii_art
-            print(ascii_art)
-            return ascii_art
+
+            canvas_width, canvas_height = self.get_canvas_size()
+            canvas = self.create_canvas(canvas_width, canvas_height)
+
+            art_lines = ascii_art.splitlines()
+            for i in range(min(canvas_height, len(art_lines))):
+                for j in range(min(canvas_width, len(art_lines[i]))):
+                    canvas[i][j] = art_lines[i][j]
+
+            # Виводимо результат
+            for line in canvas:
+                print(''.join(line))
+
+            return canvas
+
+
+            # print(ascii_art)
+            # return ascii_art
         except Exception as e:
             print(f"Error  generating ASCII art: {e}")
             return None
 
-    def preview_art(self):
-        art_preview = self.generate_art()
-        if art_preview:
-            print("Preview of your ASCII art:")
-            print(art_preview)
+    # def preview_art(self):
+    #     art_preview = self.generate_art()
+    #     if art_preview:
+    #         print("Preview of your ASCII art:")
+    #         print(art_preview)
 
     def save_to_file(self):
         try:
@@ -139,7 +169,23 @@ class MyAsciiArtGenerator:
             elif alignment == 'right':
                 aligned_art += line.rjust(width) + '\n'
         return aligned_art
-
+    
+    def get_canvas_size(self):
+        while True:
+            try:
+                width = int(input("Enter the width of the canvas (max 140): ").strip())
+                height = int(input("Enter the height of the canvas (max 28): ").strip())
+                
+                if 1 <= width <= 140 and 1 <= height <= 28:
+                    return width, height
+                else:
+                    print("Width must be between 1 and 140, height must be between 1 and 28. Please try again.")
+            except ValueError:
+                print("Invalid input. Please enter valid integers for width and height.")
+    
+    def create_canvas(self, width, height):
+        return [[' ' for _ in range(width)] for _ in range(height)]
+    
 
     def run(self):
         while True:
