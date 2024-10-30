@@ -1,5 +1,4 @@
 import os
-import shutil
 from BLL.constants import ansi_colors
 from Sources.ABC123hash import draw_char_hash
 from Sources.ABC123dog import draw_char_dog
