@@ -116,7 +116,7 @@ class AsciiArtGenerator:
 
     def save_to_file(self):
         try:
-            folder_to_save = os.path.abspath(os.path.join(os.getcwd(), os.pardir, "calculator", "Sources"))
+            folder_to_save = os.path.abspath(os.path.join(os.getcwd(), os.pardir, "calculator", "DAL"))
             os.makedirs(folder_to_save, exist_ok=True) 
             file_name = input("Enter the file name to save the ASCII art (e.g., art): ").strip()
             formatted_file_name = os.path.join(folder_to_save, f"{file_name}.txt")
